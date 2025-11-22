@@ -27,7 +27,14 @@ function buildApiUrl(endpoint) {
     // En production : https://railway.app/api/login.php
     // Assurer qu'il n'y a pas de double slash
     const baseUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL
-    return `${baseUrl}/api/${cleanEndpoint}`
+    
+    // Construire l'URL avec /api/ pour les endpoints PHP
+    // Si l'endpoint contient déjà 'api/', ne pas le dupliquer
+    if (cleanEndpoint.startsWith('api/')) {
+      return `${baseUrl}/${cleanEndpoint}`
+    } else {
+      return `${baseUrl}/api/${cleanEndpoint}`
+    }
   }
 }
 
@@ -51,25 +58,43 @@ export async function apiRequest(endpoint, options = {}) {
     },
   }
   
-  console.log('API Request:', url, config)
+  console.log('🔗 API Request URL:', url)
+  console.log('📤 API Request Config:', config)
   
   try {
     const response = await fetch(url, config)
-    console.log('API Response:', response.status, response.statusText)
+    console.log('📥 API Response Status:', response.status, response.statusText)
+    console.log('📥 API Response URL:', response.url)
     
     const text = await response.text()
-    console.log('API Response text:', text)
+    console.log('📥 API Response Text:', text.substring(0, 200))
+    
+    // Si la réponse n'est pas OK, afficher plus d'informations
+    if (!response.ok) {
+      console.error('❌ API Error:', {
+        status: response.status,
+        statusText: response.statusText,
+        url: response.url,
+        responseText: text.substring(0, 500)
+      })
+    }
     
     let data
     try {
       data = JSON.parse(text)
     } catch (e) {
-      throw new Error(`Invalid JSON response: ${text.substring(0, 100)}`)
+      const errorMsg = `Invalid JSON response from ${url}. Response: ${text.substring(0, 200)}`
+      console.error('❌ JSON Parse Error:', errorMsg)
+      throw new Error(errorMsg)
     }
     
     return { response, data }
   } catch (error) {
-    console.error('API Request Error:', error)
+    console.error('❌ API Request Error:', {
+      message: error.message,
+      url: url,
+      stack: error.stack
+    })
     throw error
   }
 }
@@ -97,25 +122,42 @@ export async function apiRequestFormData(endpoint, formData, options = {}) {
     headers: options.headers || {},
   }
   
-  console.log('API Request (FormData):', url)
+  console.log('🔗 API Request (FormData) URL:', url)
   
   try {
     const response = await fetch(url, config)
-    console.log('API Response:', response.status, response.statusText)
+    console.log('📥 API Response Status:', response.status, response.statusText)
+    console.log('📥 API Response URL:', response.url)
     
     const text = await response.text()
-    console.log('API Response text:', text)
+    console.log('📥 API Response Text:', text.substring(0, 200))
+    
+    // Si la réponse n'est pas OK, afficher plus d'informations
+    if (!response.ok) {
+      console.error('❌ API Error:', {
+        status: response.status,
+        statusText: response.statusText,
+        url: response.url,
+        responseText: text.substring(0, 500)
+      })
+    }
     
     let data
     try {
       data = JSON.parse(text)
     } catch (e) {
-      throw new Error(`Invalid JSON response: ${text.substring(0, 100)}`)
+      const errorMsg = `Invalid JSON response from ${url}. Response: ${text.substring(0, 200)}`
+      console.error('❌ JSON Parse Error:', errorMsg)
+      throw new Error(errorMsg)
     }
     
     return { response, data }
   } catch (error) {
-    console.error('API Request Error:', error)
+    console.error('❌ API Request Error:', {
+      message: error.message,
+      url: url,
+      stack: error.stack
+    })
     throw error
   }
 }
