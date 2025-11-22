@@ -2,7 +2,7 @@ import { useState, useRef, useMemo } from 'react'
 import { InlineMath, BlockMath } from 'react-katex'
 import 'katex/dist/katex.min.css'
 import jsPDF from 'jspdf'
-import { apiRequest } from './config'
+import { apiRequest, apiRequestFormData, API_BASE_URL } from './config'
 
 function MathSolver({ theme, language, t, onProblemSolved }) {
   const [image, setImage] = useState(null)
@@ -200,13 +200,8 @@ function MathSolver({ theme, language, t, onProblemSolved }) {
       const formData = new FormData()
       formData.append('image', image)
 
-      // Utiliser fetch directement car apiRequest ne supporte pas FormData
-      const response = await fetch('/api/solve_math.php', {
-        method: 'POST',
-        body: formData
-      })
-
-      const data = await response.json()
+      // Utiliser la fonction helper apiRequestFormData pour une URL cohérente
+      const { response, data } = await apiRequestFormData('solve_math.php', formData)
 
       if (!response.ok || !data.success) {
         throw new Error(data.message || 'Erreur lors de la résolution du problème')
