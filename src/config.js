@@ -71,12 +71,20 @@ export async function apiRequest(endpoint, options = {}) {
     
     // Si la réponse n'est pas OK, afficher plus d'informations
     if (!response.ok) {
-      console.error('❌ API Error:', {
+      const errorInfo = {
         status: response.status,
         statusText: response.statusText,
         url: response.url,
+        requestedUrl: url,
         responseText: text.substring(0, 500)
-      })
+      }
+      console.error('❌ API Error:', errorInfo)
+      
+      // Si c'est une erreur 404, afficher un message plus clair
+      if (response.status === 404) {
+        console.error('🔍 Endpoint non trouvé. URL utilisée:', url)
+        console.error('🔍 Vérifiez que l\'endpoint existe sur le backend Railway')
+      }
     }
     
     let data
@@ -134,12 +142,20 @@ export async function apiRequestFormData(endpoint, formData, options = {}) {
     
     // Si la réponse n'est pas OK, afficher plus d'informations
     if (!response.ok) {
-      console.error('❌ API Error:', {
+      const errorInfo = {
         status: response.status,
         statusText: response.statusText,
         url: response.url,
+        requestedUrl: url,
         responseText: text.substring(0, 500)
-      })
+      }
+      console.error('❌ API Error:', errorInfo)
+      
+      // Si c'est une erreur 404, afficher un message plus clair
+      if (response.status === 404) {
+        console.error('🔍 Endpoint non trouvé. URL utilisée:', url)
+        console.error('🔍 Vérifiez que l\'endpoint existe sur le backend Railway')
+      }
     }
     
     let data
