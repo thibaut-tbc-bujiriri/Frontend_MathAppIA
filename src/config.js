@@ -90,6 +90,15 @@ export async function apiRequest(endpoint, options = {}) {
     let data
     try {
       data = JSON.parse(text)
+      
+      // Si le backend retourne success: false, logger l'information
+      if (data && data.success === false) {
+        console.warn('⚠️ Backend returned success: false', {
+          message: data.message,
+          url: url,
+          data: data
+        })
+      }
     } catch (e) {
       const errorMsg = `Invalid JSON response from ${url}. Response: ${text.substring(0, 200)}`
       console.error('❌ JSON Parse Error:', errorMsg)
@@ -161,6 +170,15 @@ export async function apiRequestFormData(endpoint, formData, options = {}) {
     let data
     try {
       data = JSON.parse(text)
+      
+      // Si le backend retourne success: false, logger l'information
+      if (data && data.success === false) {
+        console.warn('⚠️ Backend returned success: false', {
+          message: data.message,
+          url: url,
+          data: data
+        })
+      }
     } catch (e) {
       const errorMsg = `Invalid JSON response from ${url}. Response: ${text.substring(0, 200)}`
       console.error('❌ JSON Parse Error:', errorMsg)
