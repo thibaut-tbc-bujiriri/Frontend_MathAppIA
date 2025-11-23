@@ -1,10 +1,21 @@
 // Configuration de l'API
 // Utilise toujours la variable d'environnement VITE_API_URL
 // L'URL est chargée depuis la variable d'environnement VITE_API_URL
-// En développement : utilise .env.local avec VITE_API_URL=http://localhost:8080
+// En développement : utilise .env avec VITE_API_URL
 // En production sur Vercel : configurez VITE_API_URL dans les Environment Variables de Vercel
 // L'URL doit être sans slash final
-const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'https://backendmathassistantia-production.up.railway.app' : 'http://localhost:8080')
+// URL par défaut du backend Railway
+const DEFAULT_API_URL = 'https://backendmathassistantia-production.up.railway.app'
+const API_URL = import.meta.env.VITE_API_URL || DEFAULT_API_URL
+
+// Log pour déboguer en production
+if (typeof window !== 'undefined') {
+  console.log('🔧 API Configuration:', {
+    VITE_API_URL: import.meta.env.VITE_API_URL,
+    API_URL: API_URL,
+    mode: import.meta.env.MODE
+  })
+}
 
 export const API_BASE_URL = API_URL
 
