@@ -3,9 +3,11 @@
 const isDevelopment = import.meta.env.DEV
 
 // ⚠️ IMPORTANT : URL Railway configurée
-// Vous pouvez aussi utiliser la variable d'environnement VITE_API_URL pour surcharger cette valeur
+// L'URL est chargée depuis la variable d'environnement VITE_API_URL
+// En développement : utilise .env.local
+// En production sur Vercel : configurez VITE_API_URL dans les Environment Variables de Vercel
 // L'URL doit être sans slash final
-const RAILWAY_URL = import.meta.env.VITE_API_URL || 'https://web-production-0970f.up.railway.app'
+const RAILWAY_URL = import.meta.env.VITE_API_URL || 'https://backendmathassistantia-production.up.railway.app'
 
 export const API_BASE_URL = isDevelopment 
   ? '/api'  // Utilise le proxy Vite en développement
