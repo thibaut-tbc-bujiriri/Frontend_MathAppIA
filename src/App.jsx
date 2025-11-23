@@ -482,7 +482,8 @@ function SignUp({ onSwitchToLogin, theme, toggleTheme, language, t, toggleLangua
       console.error('Registration error:', error)
       
       if (error.name === 'TypeError' && error.message.includes('fetch')) {
-        alert('Erreur de connexion réseau. Vérifiez que:\n1. L\'URL du backend est correcte dans le fichier .env\n2. Le backend est accessible')
+        const apiUrl = import.meta.env.VITE_API_URL || 'Non configurée'
+        alert(`Erreur de connexion réseau.\n\nURL backend configurée: ${apiUrl}\n\nVérifiez que:\n1. La variable VITE_API_URL est configurée sur Vercel\n2. Le backend Railway est accessible\n3. L'URL est correcte: https://backendmathassistantia-production.up.railway.app`)
       } else {
         alert('Erreur: ' + error.message + '\n\nVérifiez la console pour plus de détails.')
       }
