@@ -35,7 +35,13 @@ function Login({ onSwitchToSignUp, onSwitchToForgotPassword, onLoginSuccess, the
       }
     } catch (error) {
       console.error('Login error:', error)
-      alert(t('loginFailed') + ': ' + error.message)
+      
+      if (error.name === 'TypeError' && error.message.includes('fetch')) {
+        const apiUrl = import.meta.env.VITE_API_URL || 'Non configurée'
+        alert(`Erreur de connexion réseau.\n\nURL backend configurée: ${apiUrl}\n\nVérifiez que:\n1. La variable VITE_API_URL est configurée sur Vercel\n2. Le backend Railway est accessible\n3. L'URL est correcte: https://backendmathassistantia-production.up.railway.app`)
+      } else {
+        alert(t('loginFailed') + ': ' + error.message)
+      }
     }
   }
 
@@ -199,7 +205,13 @@ function ForgotPassword({ onSwitchToLogin, theme, toggleTheme, language, t, togg
       }
     } catch (error) {
       console.error('Forgot password error:', error)
-      alert(t('resetFailed') + ': ' + error.message)
+      
+      if (error.name === 'TypeError' && error.message.includes('fetch')) {
+        const apiUrl = import.meta.env.VITE_API_URL || 'Non configurée'
+        alert(`Erreur de connexion réseau.\n\nURL backend configurée: ${apiUrl}\n\nVérifiez que:\n1. La variable VITE_API_URL est configurée sur Vercel\n2. Le backend Railway est accessible\n3. L'URL est correcte: https://backendmathassistantia-production.up.railway.app`)
+      } else {
+        alert(t('resetFailed') + ': ' + error.message)
+      }
     } finally {
       setLoading(false)
     }
