@@ -26,3 +26,4 @@ VITE_API_URL=https://backendmathassistantia-production.up.railway.app
 Le fichier `.env.local` est ignoré par Git (dans `.gitignore`) pour des raisons de sécurité.
 En production, utilisez toujours les Environment Variables de Vercel.
 
+
