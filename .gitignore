@@ -32,4 +32,9 @@ src_temp
 public_temp
 api_temp
 
+# Environment variables
+.env
+.env.local
+.env.*.local
+
 

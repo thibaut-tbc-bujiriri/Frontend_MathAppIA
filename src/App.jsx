@@ -482,7 +482,7 @@ function SignUp({ onSwitchToLogin, theme, toggleTheme, language, t, toggleLangua
       console.error('Registration error:', error)
       
       if (error.name === 'TypeError' && error.message.includes('fetch')) {
-        alert('Erreur de connexion réseau. Vérifiez que:\n1. XAMPP (Apache) est démarré sur le port 8080\n2. L\'URL est correcte')
+        alert('Erreur de connexion réseau. Vérifiez que:\n1. L\'URL du backend est correcte dans le fichier .env\n2. Le backend est accessible')
       } else {
         alert('Erreur: ' + error.message + '\n\nVérifiez la console pour plus de détails.')
       }

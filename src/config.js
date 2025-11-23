@@ -1,17 +1,12 @@
 // Configuration de l'API
-// Utilise le proxy Vite en développement, l'URL Railway en production
-const isDevelopment = import.meta.env.DEV
-
-// ⚠️ IMPORTANT : URL Railway configurée
+// Utilise toujours la variable d'environnement VITE_API_URL
 // L'URL est chargée depuis la variable d'environnement VITE_API_URL
-// En développement : utilise .env.local
+// En développement : utilise .env
 // En production sur Vercel : configurez VITE_API_URL dans les Environment Variables de Vercel
 // L'URL doit être sans slash final
-const RAILWAY_URL = import.meta.env.VITE_API_URL || 'https://backendmathassistantia-production.up.railway.app'
+const API_URL = import.meta.env.VITE_API_URL || 'https://backendmathassistantia-production.up.railway.app'
 
-export const API_BASE_URL = isDevelopment 
-  ? '/api'  // Utilise le proxy Vite en développement
-  : RAILWAY_URL  // Production : Railway
+export const API_BASE_URL = API_URL
 
 /**
  * Construit l'URL complète pour un endpoint API
@@ -22,21 +17,15 @@ function buildApiUrl(endpoint) {
   // Supprimer le slash initial de l'endpoint s'il existe
   const cleanEndpoint = endpoint.startsWith('/') ? endpoint.slice(1) : endpoint
   
-  if (isDevelopment) {
-    // En développement : /api/login.php (le proxy Vite gère le reste)
-    return `${API_BASE_URL}/${cleanEndpoint}`
+  // Assurer qu'il n'y a pas de double slash
+  const baseUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL
+  
+  // Construire l'URL avec /api/ pour les endpoints PHP
+  // Si l'endpoint contient déjà 'api/', ne pas le dupliquer
+  if (cleanEndpoint.startsWith('api/')) {
+    return `${baseUrl}/${cleanEndpoint}`
   } else {
-    // En production : https://railway.app/api/login.php
-    // Assurer qu'il n'y a pas de double slash
-    const baseUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL
-    
-    // Construire l'URL avec /api/ pour les endpoints PHP
-    // Si l'endpoint contient déjà 'api/', ne pas le dupliquer
-    if (cleanEndpoint.startsWith('api/')) {
-      return `${baseUrl}/${cleanEndpoint}`
-    } else {
-      return `${baseUrl}/api/${cleanEndpoint}`
-    }
+    return `${baseUrl}/api/${cleanEndpoint}`
   }
 }
 
