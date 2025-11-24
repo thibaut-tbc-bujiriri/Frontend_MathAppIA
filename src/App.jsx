@@ -40,7 +40,14 @@ function Login({ onSwitchToSignUp, onSwitchToForgotPassword, onLoginSuccess, the
         const apiUrl = import.meta.env.VITE_API_URL || 'Non configurée'
         alert(`Erreur de connexion réseau.\n\nURL backend configurée: ${apiUrl}\n\nVérifiez que:\n1. La variable VITE_API_URL est configurée sur Vercel\n2. Le backend Railway est accessible\n3. L'URL est correcte: https://backendmathassistantia-production.up.railway.app`)
       } else {
-        alert(t('loginFailed') + ': ' + error.message)
+        // Afficher un message d'erreur plus informatif
+        const errorMsg = error.message || 'Erreur inconnue'
+        if (errorMsg.includes('Failed to fetch') || errorMsg.includes('NetworkError')) {
+          const apiUrl = import.meta.env.VITE_API_URL || 'Non configurée'
+          alert(`Erreur de connexion réseau.\n\nURL backend configurée: ${apiUrl}\n\nVérifiez que:\n1. La variable VITE_API_URL est configurée sur Vercel\n2. Le backend Railway est accessible\n3. L'URL est correcte: https://backendmathassistantia-production.up.railway.app`)
+        } else {
+          alert(t('loginFailed') + ': ' + errorMsg)
+        }
       }
     }
   }
@@ -493,11 +500,13 @@ function SignUp({ onSwitchToLogin, theme, toggleTheme, language, t, toggleLangua
     } catch (error) {
       console.error('Registration error:', error)
       
-      if (error.name === 'TypeError' && error.message.includes('fetch')) {
+      // Gérer tous les types d'erreurs de réseau
+      const errorMsg = error.message || 'Erreur inconnue'
+      if (error.name === 'TypeError' && (errorMsg.includes('fetch') || errorMsg.includes('Failed to fetch') || errorMsg.includes('NetworkError'))) {
         const apiUrl = import.meta.env.VITE_API_URL || 'Non configurée'
         alert(`Erreur de connexion réseau.\n\nURL backend configurée: ${apiUrl}\n\nVérifiez que:\n1. La variable VITE_API_URL est configurée sur Vercel\n2. Le backend Railway est accessible\n3. L'URL est correcte: https://backendmathassistantia-production.up.railway.app`)
       } else {
-        alert('Erreur: ' + error.message + '\n\nVérifiez la console pour plus de détails.')
+        alert('Erreur: ' + errorMsg + '\n\nVérifiez la console pour plus de détails.')
       }
     }
   }
